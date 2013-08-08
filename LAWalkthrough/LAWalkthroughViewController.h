@@ -25,29 +25,26 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LAWalkthroughViewController : UIViewController <UIPageViewControllerDelegate, UIScrollViewDelegate>
-{
-  UIScrollView *scrollView;
-  UIPageControl *pageControl;
-  BOOL pageControlUsed;
-}
+@interface LAWalkthroughViewController : UIViewController
 
 @property (nonatomic,strong) UIImage *backgroundImage;
 @property (nonatomic,readonly) UIImageView *backgroundImageView;
 @property (nonatomic,readonly) UIButton *nextButton;
 @property (nonatomic) UIImage *nextButtonImage;
-@property (nonatomic) NSString *nextButtonText;
+@property (nonatomic) NSString *nextButtonText, *skipButtonText;
 @property (nonatomic,readonly) NSInteger numberOfPages;
 @property (nonatomic) NSInteger pageControlBottomMargin;
 @property (nonatomic,readonly) CGRect pageControlFrame;
 @property (nonatomic,readonly,copy) NSArray *pages;
+@property (nonatomic,strong) void (^completionHandler)(LAWalkthroughViewController *vc);
 
 - (UIView *)addPageWithBody:(NSString *)bodyText;
-- (UIView *)addPageWithNibName:(NSString *)name bundle:(NSBundle *)bundleOrNil;
+- (UIView *)addPageWithNibName:(NSString *)name bundle:(NSBundle *)bundleOrNil owner:(id)ownerOrNil;
 - (UIView *)addPageWithView:(UIView *)pageView;
 
 // Actions
 - (void)displayNextPage;
+- (void)skipWalkthrough;
 
 // UI Customization
 - (void)changePage;
