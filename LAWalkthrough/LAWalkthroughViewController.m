@@ -102,7 +102,7 @@
     BOOL useDefaultNextButton = !(self.nextButtonImage || self.nextButtonText);
     if (useDefaultNextButton)
     {
-        self.nextButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        self.nextButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure]; // FIXME: Looks wrong on iOS 7
         self.nextButton.frame = CGRectMake(0, 0, self.nextButton.frame.size.width+20, self.nextButton.frame.size.height);
     }
     else
@@ -117,14 +117,17 @@
         }
         else if (self.nextButtonImage)
         {
-            self.nextButton.imageView.image = self.nextButtonImage;
+            [self.nextButton setImage:self.nextButtonImage forState:UIControlStateNormal];
             buttonFrame.size = self.nextButtonImage.size;
+            if (buttonFrame.size.width < 100.0f)
+                buttonFrame.size.width = 100.0f;
         }
         self.nextButton.frame = buttonFrame;
     }
     CGRect buttonFrame = self.nextButton.frame;
     buttonFrame.origin = self.nextButtonOrigin;
     self.nextButton.frame = buttonFrame;
+    self.nextButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:self.nextButton];
     [self.nextButton addTarget:self
                         action:@selector(displayNextPage)
@@ -244,7 +247,12 @@
 
 - (CGPoint)nextButtonOrigin
 {
-    return CGPointMake(_pageControl.frame.size.width - self.nextButton.frame.size.width, _pageControl.frame.origin.y);
+    CGFloat buttonWidth = self.nextButton.frame.size.width;
+    if (buttonWidth < 100.0f) {
+        buttonWidth = 100.0f;
+    }
+    return CGPointMake(_pageControl.frame.size.width - buttonWidth,
+                       _pageControl.frame.origin.y);
 }
 
 - (CGRect)pageControlFrame
@@ -271,8 +279,8 @@
     CGFloat pageWidth = _scrollView.frame.size.width;
     int nextPage = floor((_scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     
-    // Hide the Next button when this is the last page
-    self.nextButton.hidden = nextPage == (_pageControl.numberOfPages-1);
+    // Hide the Next and Skip buttons when this is the last page
+    self.skipButton.hidden = self.nextButton.hidden = nextPage == (_pageControl.numberOfPages-1);
     
     if (_pageControlUsed)
     {
