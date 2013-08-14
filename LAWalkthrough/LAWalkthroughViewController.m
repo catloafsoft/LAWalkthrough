@@ -245,6 +245,11 @@
     return _pageViews.count;
 }
 
+- (NSInteger)currentPage
+{
+    return _pageControl.currentPage;
+}
+
 - (CGPoint)nextButtonOrigin
 {
     CGFloat buttonWidth = self.nextButton.frame.size.width;

@@ -33,7 +33,7 @@
 @property (nonatomic) UIImage *nextButtonImage;
 @property (nonatomic) NSString *nextButtonText, *skipButtonText;
 @property (nonatomic,readonly) NSInteger numberOfPages;
-@property (nonatomic) NSInteger pageControlBottomMargin;
+@property (nonatomic) NSInteger pageControlBottomMargin, currentPage;
 @property (nonatomic,readonly) CGRect pageControlFrame;
 @property (nonatomic,readonly,copy) NSArray *pages;
 @property (nonatomic,strong) void (^completionHandler)(LAWalkthroughViewController *vc);
