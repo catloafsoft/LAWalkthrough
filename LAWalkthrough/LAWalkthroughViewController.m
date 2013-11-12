@@ -64,6 +64,10 @@
 {
     [super viewDidLoad];
     
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
     self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:self.backgroundImageView];
     
@@ -82,6 +86,22 @@
            forControlEvents:UIControlEventValueChanged];
     _pageControl.currentPage = 0;
     [self.view addSubview:_pageControl];
+}
+
+- (void)viewWillLayoutSubviews
+{
+    _scrollView.frame = self.view.frame;
+    _scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width * self.numberOfPages,
+                                         _scrollView.frame.size.height);
+
+    // Readjust the views within
+    NSUInteger i = 0;
+    for(UIView *view in _pageViews) {
+        CGRect frame = view.frame;
+        frame.origin.x = i * _scrollView.frame.size.width;
+        view.frame = frame;
+        i++;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -275,6 +295,23 @@
     UIPageControl *pc = [[UIPageControl alloc] initWithFrame:CGRectZero];
     pc.hidesForSinglePage = YES;
     return pc;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return YES;
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
 }
 
 #pragma mark UIScrollViewDelegate methods
