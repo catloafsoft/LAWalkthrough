@@ -31,7 +31,7 @@
 }
 
 @property (nonatomic) UIImageView *backgroundImageView;
-@property (nonatomic) UIButton *nextButton, *skipButton;
+@property (nonatomic) UIButton *nextButton, *skipButton, *finishButton;
 
 @end
 
@@ -164,6 +164,20 @@
                   forControlEvents:UIControlEventTouchUpInside];
         self.skipButton.frame = CGRectMake(_pageControl.frame.origin.x, _pageControl.frame.origin.y, 100, 36);
         [self.view addSubview:self.skipButton];
+    }
+    
+    // Add optional Finish button on the right to the last view.
+    if (self.completionHandler && self.finishButtonText) {
+        self.finishButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.finishButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+        [self.finishButton setTitle:self.finishButtonText
+                         forState:UIControlStateNormal];
+        [self.finishButton addTarget:self
+                            action:@selector(skipWalkthrough)
+                  forControlEvents:UIControlEventTouchUpInside];
+        self.finishButton.frame = CGRectMake(self.nextButtonOrigin.x, self.nextButtonOrigin.y, 100, 36);
+        self.finishButton.hidden = !self.nextButton.hidden;
+        [self.view addSubview:self.finishButton];
     }
     
     [super viewWillAppear:animated];
@@ -323,6 +337,9 @@
     
     // Hide the Next and Skip buttons when this is the last page
     self.skipButton.hidden = self.nextButton.hidden = nextPage == (_pageControl.numberOfPages-1);
+    
+    // Show Finish button when this is the last page.
+    self.finishButton.hidden = !self.nextButton.hidden;
     
     if (_pageControlUsed)
     {
