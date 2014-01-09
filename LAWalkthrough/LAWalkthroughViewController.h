@@ -32,6 +32,7 @@
 @property (nonatomic,readonly) UIButton *nextButton;
 @property (nonatomic) UIImage *nextButtonImage;
 @property (nonatomic) NSString *nextButtonText, *skipButtonText, *finishButtonText;
+@property (nonatomic) UIColor *bodyTextColor;
 @property (nonatomic,readonly) NSInteger numberOfPages;
 @property (nonatomic) NSInteger pageControlBottomMargin, currentPage;
 @property (nonatomic,readonly) CGRect pageControlFrame;
