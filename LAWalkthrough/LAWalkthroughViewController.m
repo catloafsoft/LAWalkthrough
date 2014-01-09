@@ -197,7 +197,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:frame];
     label.backgroundColor = [UIColor clearColor];
     label.opaque = NO;
-    label.textColor = [UIColor lightGrayColor];
+    label.textColor = (self.bodyTextColor != nil) ? self.bodyTextColor : [UIColor lightGrayColor];
     label.font = [UIFont systemFontOfSize:22];
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.numberOfLines = 0;
