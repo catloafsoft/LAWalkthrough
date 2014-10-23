@@ -31,7 +31,7 @@
 }
 
 @property (nonatomic) UIImageView *backgroundImageView;
-@property (nonatomic) UIButton *nextButton, *skipButton, *finishButton;
+@property (nonatomic) UIButton *nextButton, *skipButton;
 
 @end
 
@@ -39,6 +39,7 @@
 {
     UIScrollView *_scrollView;
     UIPageControl *_pageControl;
+    NSInteger _lastPage;
     BOOL _pageControlUsed;
 }
 
@@ -49,9 +50,14 @@
     {
         _pageViews = NSMutableArray.new;
         
-        self.pageControlBottomMargin = 10;
+        _pageControlBottomMargin = 10;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    _scrollView.delegate = nil;
 }
 
 - (void)loadView
@@ -166,20 +172,6 @@
         [self.view addSubview:self.skipButton];
     }
     
-    // Add optional Finish button on the right to the last view.
-    if (self.completionHandler && self.finishButtonText) {
-        self.finishButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.finishButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
-        [self.finishButton setTitle:self.finishButtonText
-                         forState:UIControlStateNormal];
-        [self.finishButton addTarget:self
-                            action:@selector(skipWalkthrough)
-                  forControlEvents:UIControlEventTouchUpInside];
-        self.finishButton.frame = CGRectMake(self.nextButtonOrigin.x, self.nextButtonOrigin.y, 100, 36);
-        self.finishButton.hidden = !self.nextButton.hidden;
-        [self.view addSubview:self.finishButton];
-    }
-    
     [super viewWillAppear:animated];
 }
 
@@ -197,7 +189,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:frame];
     label.backgroundColor = [UIColor clearColor];
     label.opaque = NO;
-    label.textColor = (self.bodyTextColor != nil) ? self.bodyTextColor : [UIColor lightGrayColor];
+    label.textColor = [UIColor lightGrayColor];
     label.font = [UIFont systemFontOfSize:22];
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.numberOfLines = 0;
@@ -257,14 +249,18 @@
 
 - (void)changePage
 {
-    NSInteger pageIndex = _pageControl.currentPage;
+    if (self.pageChanged) {
+        self.pageChanged(_lastPage, _pageControl.currentPage);
+    }
+
+    NSInteger pageIndex = _lastPage = _pageControl.currentPage;
     
     // update the scroll view to the appropriate page
     CGRect frame = _scrollView.frame;
     frame.origin.x = frame.size.width * pageIndex;
     frame.origin.y = 0;
     [_scrollView scrollRectToVisible:frame animated:YES];
-    
+
     _pageControlUsed = YES;
 }
 
@@ -338,15 +334,16 @@
     // Hide the Next and Skip buttons when this is the last page
     self.skipButton.hidden = self.nextButton.hidden = nextPage == (_pageControl.numberOfPages-1);
     
-    // Show Finish button when this is the last page.
-    self.finishButton.hidden = !self.nextButton.hidden;
-    
     if (_pageControlUsed)
     {
         return;
     }
-    
-    _pageControl.currentPage = nextPage;
+
+    if (self.pageChanged && nextPage!=_pageControl.currentPage) {
+        self.pageChanged(_pageControl.currentPage, nextPage);
+    }
+
+    _lastPage = _pageControl.currentPage = nextPage;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

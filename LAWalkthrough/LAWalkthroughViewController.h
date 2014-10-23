@@ -31,13 +31,18 @@
 @property (nonatomic,readonly) UIImageView *backgroundImageView;
 @property (nonatomic,readonly) UIButton *nextButton;
 @property (nonatomic) UIImage *nextButtonImage;
-@property (nonatomic) NSString *nextButtonText, *skipButtonText, *finishButtonText;
-@property (nonatomic) UIColor *bodyTextColor;
+@property (nonatomic,copy) NSString *nextButtonText, *skipButtonText;
 @property (nonatomic,readonly) NSInteger numberOfPages;
 @property (nonatomic) NSInteger pageControlBottomMargin, currentPage;
 @property (nonatomic,readonly) CGRect pageControlFrame;
 @property (nonatomic,readonly,copy) NSArray *pages;
+
+// Handlers
+
+// Upon completion of the walkthrough
 @property (nonatomic,strong) void (^completionHandler)(LAWalkthroughViewController *vc);
+// Called when changing pages at any point in the walkthrough
+@property (nonatomic,strong) void (^pageChanged)(NSUInteger from, NSUInteger to);
 
 - (UIView *)addPageWithBody:(NSString *)bodyText;
 - (UIView *)addPageWithNibName:(NSString *)name bundle:(NSBundle *)bundleOrNil owner:(id)ownerOrNil;
