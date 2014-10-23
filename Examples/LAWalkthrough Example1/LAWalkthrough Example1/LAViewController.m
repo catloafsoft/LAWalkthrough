@@ -17,28 +17,33 @@
 
 - (void)createWalkthrough
 {
-  // Create the walkthrough view controller
-  LAWalkthroughViewController *walkthrough = LAWalkthroughViewController.new;
-  walkthrough.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-  walkthrough.backgroundImage = [UIImage imageNamed:@"tour-bg@2x"];
-  
-  // Create pages of the walkthrough
-  [walkthrough addPageWithBody:@"Take a tour of this app."];
-  [walkthrough addPageWithBody:@"Thanks for taking this tour."];
-  
-  // Use the default next button
-  walkthrough.nextButtonText = nil;
-  
-  // Add the walkthrough view to your view controller's view
-  [self addChildViewController:walkthrough];
-  [self.view addSubview:walkthrough.view];
+    // Create the walkthrough view controller
+    LAWalkthroughViewController *walkthrough = LAWalkthroughViewController.new;
+    walkthrough.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    walkthrough.backgroundImage = [UIImage imageNamed:@"tour-bg@2x"];
+    
+    // Create pages of the walkthrough
+    [walkthrough addPageWithBody:@"Take a tour of this app."];
+    [walkthrough addPageWithBody:@"Thanks for taking this tour."];
+    
+    // Use the default next button
+    walkthrough.nextButtonText = nil;
+    
+    // Set a handler for when pages are changed
+    walkthrough.pageChanged = ^(NSUInteger from, NSUInteger to) {
+        NSLog(@"Page changed from %@ to %@", @(from), @(to));
+    };
+    
+    // Add the walkthrough view to your view controller's view
+    [self addChildViewController:walkthrough];
+    [self.view addSubview:walkthrough.view];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-  [self createWalkthrough];
-  
-  [super viewDidAppear:animated];
+    [self createWalkthrough];
+    
+    [super viewDidAppear:animated];
 }
 
 @end
