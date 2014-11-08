@@ -51,6 +51,8 @@
         _pageViews = NSMutableArray.new;
         
         _pageControlBottomMargin = 10;
+        _controlsColor = [UIColor whiteColor];
+        _pageIndicatorColor = [UIColor colorWithRed:0.908 green:0.926 blue:0.932 alpha:1.000];
     }
     return self;
 }
@@ -124,6 +126,8 @@
     
     _pageControl.frame = self.pageControlFrame;
     _pageControl.numberOfPages = self.numberOfPages;
+    [_pageControl setPageIndicatorTintColor:self.pageIndicatorColor];
+    [_pageControl setCurrentPageIndicatorTintColor:self.controlsColor];
     
     BOOL useDefaultNextButton = !(self.nextButtonImage || self.nextButtonText);
     if (useDefaultNextButton)
@@ -139,6 +143,7 @@
         {
             [self.nextButton setTitle:self.nextButtonText forState:UIControlStateNormal];
             self.nextButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+            [self.nextButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
             buttonFrame.size = CGSizeMake(100, 36);
         }
         else if (self.nextButtonImage)
@@ -163,6 +168,7 @@
     if (self.completionHandler && self.skipButtonText) {
         self.skipButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.skipButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+        [self.skipButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
         [self.skipButton setTitle:self.skipButtonText
                          forState:UIControlStateNormal];
         [self.skipButton addTarget:self
@@ -170,6 +176,21 @@
                   forControlEvents:UIControlEventTouchUpInside];
         self.skipButton.frame = CGRectMake(_pageControl.frame.origin.x, _pageControl.frame.origin.y, 100, 36);
         [self.view addSubview:self.skipButton];
+    }
+    
+    // Add optional Finish button on the right to the last view.
+    if (self.completionHandler && self.finishButtonText) {
+        self.finishButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.finishButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+        [self.finishButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
+        [self.finishButton setTitle:self.finishButtonText
+                         forState:UIControlStateNormal];
+        [self.finishButton addTarget:self
+                            action:@selector(skipWalkthrough)
+                  forControlEvents:UIControlEventTouchUpInside];
+        self.finishButton.frame = CGRectMake(self.nextButtonOrigin.x, self.nextButtonOrigin.y, 100, 36);
+        self.finishButton.hidden = !self.nextButton.hidden;
+        [self.view addSubview:self.finishButton];
     }
     
     [super viewWillAppear:animated];
