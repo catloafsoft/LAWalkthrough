@@ -50,6 +50,8 @@
         _pageViews = NSMutableArray.new;
         
         self.pageControlBottomMargin = 10;
+        self.controlsColor = [UIColor whiteColor];
+        self.pageIndicatorColor = [UIColor colorWithRed:0.908 green:0.926 blue:0.932 alpha:1.000];
     }
     return self;
 }
@@ -118,6 +120,8 @@
     
     _pageControl.frame = self.pageControlFrame;
     _pageControl.numberOfPages = self.numberOfPages;
+    [_pageControl setPageIndicatorTintColor:self.pageIndicatorColor];
+    [_pageControl setCurrentPageIndicatorTintColor:self.controlsColor];
     
     BOOL useDefaultNextButton = !(self.nextButtonImage || self.nextButtonText);
     if (useDefaultNextButton)
@@ -133,6 +137,7 @@
         {
             [self.nextButton setTitle:self.nextButtonText forState:UIControlStateNormal];
             self.nextButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+            [self.nextButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
             buttonFrame.size = CGSizeMake(100, 36);
         }
         else if (self.nextButtonImage)
@@ -157,6 +162,7 @@
     if (self.completionHandler && self.skipButtonText) {
         self.skipButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.skipButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+        [self.skipButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
         [self.skipButton setTitle:self.skipButtonText
                          forState:UIControlStateNormal];
         [self.skipButton addTarget:self
@@ -170,6 +176,7 @@
     if (self.completionHandler && self.finishButtonText) {
         self.finishButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.finishButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+        [self.finishButton setTitleColor:self.controlsColor forState:UIControlStateNormal];
         [self.finishButton setTitle:self.finishButtonText
                          forState:UIControlStateNormal];
         [self.finishButton addTarget:self
