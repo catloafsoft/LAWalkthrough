@@ -31,7 +31,7 @@
 }
 
 @property (nonatomic) UIImageView *backgroundImageView;
-@property (nonatomic) UIButton *nextButton, *skipButton;
+@property (nonatomic) UIButton *nextButton, *skipButton, *finishButton;
 
 @end
 
